@@ -12,8 +12,8 @@ $httpClient.get(url, function(error, response, data) {
   const cnyToNgn = rates.NGN.toFixed(2);
   const eurToCny = (1 / rates.EUR).toFixed(2);
   const gbpToCny = (1 / rates.GBP).toFixed(2);
-  const tryToCny = rates.TRY.toFixed(2);
-  const egpToCny = rates.EGP.toFixed(2);
+  const cnyToTry = rates.TRY.toFixed(2);
+  const cnyToEgp = rates.EGP.toFixed(2);
   const timestamp = new Date().toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
@@ -25,8 +25,8 @@ $httpClient.get(url, function(error, response, data) {
 🇨🇳1人民币兑换 ${cnyToHkd}🇭🇰港币
 🇨🇳1人民币兑换 ${cnyToJpy}🇯🇵日元
 🇨🇳1人民币兑换 ${cnyToNgn}🇳🇬奈拉
-🇨🇳1人民币兑换 ${tryToCny}🇪🇬埃及镑
-🇨🇳1人民币兑换 ${tryToCny}🇹🇷里拉
+🇨🇳1人民币兑换 ${cnyToEgp}🇪🇬埃及镑
+🇨🇳1人民币兑换 ${cnyToTry}🇹🇷里拉
 🇪🇺1欧元兑换 ${eurToCny}🇨🇳人民币
 🇬🇧1英镑兑换 ${gbpToCny}🇨🇳人民币
   `;
