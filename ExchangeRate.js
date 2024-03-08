@@ -7,7 +7,7 @@ $httpClient.get(url, function(error, response, data) {
   }
   const rates = JSON.parse(data).rates;
   const usdToCny = (1 / rates.USD).toFixed(2);
-  const cnyToHkd = rates.HKD.toFixed(2);
+  const hkdToCny = (1 / rates.HKD).toFixed(2);
   const cnyToJpy = rates.JPY.toFixed(2);
   const cnyToNgn = rates.NGN.toFixed(2);
   const eurToCny = (1 / rates.EUR).toFixed(2);
@@ -22,7 +22,7 @@ $httpClient.get(url, function(error, response, data) {
 
   const content = `
 🇺🇸1美元兑换 ${usdToCny}🇨🇳人民币
-🇨🇳1人民币兑换 ${cnyToHkd}🇭🇰港币
+🇭🇰1港币兑换 ${hkdToCny}🇨🇳人民币
 🇨🇳1人民币兑换 ${cnyToJpy}🇯🇵日元
 🇨🇳1人民币兑换 ${cnyToNgn}🇳🇬奈拉
 🇨🇳1人民币兑换 ${cnyToEgp}🇪🇬埃及镑
