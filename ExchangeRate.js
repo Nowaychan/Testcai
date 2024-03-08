@@ -1,69 +1,50 @@
-// 定义汇率获取函数
-async function fetchExchangeRate() {
-    const base = "CNY";
-    const digits = 2;
-    const currencyNames = {
-        CNY: ["人民币", "🇨🇳"],
-        USD: ["美元", "🇺🇸"],
-        HKD: ["港币", "🇭🇰"],
-        JPY: ["日元", "🇯🇵"],
-        NGN: ["奈拉", "🇳🇬"],
-        TRY: ["里拉", "🇹🇷"],
-    };
+const url = "https://api.exchangerate-api.com/v4/latest/CNY";
+const params = getParams($argument);
+$httpClient.get(url, function(error, response, data) {
+  if (error) {
+    $done();
+    return;
+  }
+  const rates = JSON.parse(data).rates;
+  const usdToCny = (1 / rates.USD).toFixed(2);
+  const cnyToHkd = rates.HKD.toFixed(2);
+  const cnyToJpy = rates.JPY.toFixed(2);
+  const cnyToNgn = rates.NGN.toFixed(2);
+  const eurToCny = (1 / rates.EUR).toFixed(2);
+  const gbpToCny = (1 / rates.GBP).toFixed(2);
+  const tryToCny = rates.TRY.toFixed(2);
+  const egpToCny = rates.EGP.toFixed(2);
+  const timestamp = new Date().toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
 
-    try {
-        const response = await $httpClient.get("https://api.exchangerate-api.com/v4/latest/CNY");
-        const data = JSON.parse(response.body);
-        const source = currencyNames[base];
+  const content = `
+🇺🇸1美元兑换 ${usdToCny}🇨🇳人民币
+🇨🇳1人民币兑换 ${cnyToHkd}🇭🇰港币
+🇨🇳1人民币兑换 ${cnyToJpy}🇯🇵日元
+🇨🇳1人民币兑换 ${cnyToNgn}🇳🇬奈拉
+🇨🇳1人民币兑换 ${tryToCny}🇪🇬埃及镑
+🇨🇳1人民币兑换 ${tryToCny}🇹🇷里拉
+🇪🇺1欧元兑换 ${eurToCny}🇨🇳人民币
+🇬🇧1英镑兑换 ${gbpToCny}🇨🇳人民币
+  `;
 
-        let info = Object.keys(currencyNames).reduce((accumulator, key) => {
-            let line = "";
-            if (key !== base && data.rates.hasOwnProperty(key)) {
-                const rate = parseFloat(data.rates[key]);
-                const target = currencyNames[key];
-                if (rate > 1) {
-                    line = `${target[1]} 1${source[0]}=${roundNumber(rate, digits)}${target[0]}`;
-                } else {
-                    line = `${target[1]} 1${target[0]}=${roundNumber(1 / rate, digits)}CNY`;
-                }
-            }
-            return accumulator + (line ? line + ", " : "");
-        }, "");
+  const panel = {
+    title: `🪙当前汇率信息 ${timestamp}`,
+    content: content,
+	        icon: params.icon,
+        "icon-color": params.color
+  };
 
-        info = info.replace(/, $/, "");
-        return `${data.date}: ${info}`;
-    } catch (error) {
-        return "汇率获取失败";
-    }
+  $done(panel);
+});
+function getParams(param) {
+  return Object.fromEntries(
+    $argument
+      .split("&")
+      .map((item) => item.split("="))
+      .map(([k, v]) => [k, decodeURIComponent(v)])
+  );
 }
-
-function roundNumber(num, scale) {
-    if (!("" + num).includes("e")) {
-        return +(Math.round(num + "e+" + scale) + "e-" + scale);
-    } else {
-        let arr = ("" + num).split("e");
-        let sig = "";
-        if (+arr[1] + scale > 0) {
-            sig = "+";
-        }
-        return +(
-            Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) +
-            "e-" +
-            scale
-        );
-    }
-}
-
-// Surge Panel 显示函数
-function renderPanel(title, content) {
-    $done({
-        title,
-        content,
-    });
-}
-
-// 执行汇率获取并渲染 Panel
-(async () => {
-    const rateInfo = await fetchExchangeRate();
-    renderPanel("汇率信息", rateInfo);
-})();
