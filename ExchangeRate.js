@@ -1,4 +1,4 @@
-#参考https://raw.githubusercontent.com/deezertidal/Surge_Module/master/files/rates.js
+//参考https://raw.githubusercontent.com/deezertidal/Surge_Module/master/files/rates.js
 const url = "https://api.exchangerate-api.com/v4/latest/CNY";
 const params = getParams($argument);
 $httpClient.get(url, function(error, response, data) {
