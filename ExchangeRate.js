@@ -7,7 +7,7 @@ $httpClient.get(url, function(error, response, data) {
   }
   const rates = JSON.parse(data).rates;
   const usdToCny = (1 / rates.USD).toFixed(2);
-  const hkdToCny = (1 / rates.HKD).toFixed(2);
+  const hkdToCny = rates.HKD.toFixed(2);
   const cnyToJpy = rates.JPY.toFixed(2);
   const cnyToNgn = rates.NGN.toFixed(2);
   const eurToCny = (1 / rates.EUR).toFixed(2);
